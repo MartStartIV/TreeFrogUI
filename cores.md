@@ -162,6 +162,7 @@ ROM folder name → core .so file. Built = present in `build/`. ❌ = not built 
 | `cdg` | CD+G Karaoke | `pocketcdg_libretro.so` | [libretro/libretro-pocketcdg](https://github.com/libretro/libretro-pocketcdg) |
 | `gme` | Game Music Emu | `gme_libretro.so` | [libretro/libretro-gme](https://github.com/libretro/libretro-gme) |
 | `Ebook` | Ebook / document reader (EPUB/MOBI/PDF/CBZ/FB2) - **standalone** binary, MuPDF - 📖 [guide](docs/cores/ebook.md) | `cubegm/ebook` | [tzubertowski/TreeFrogUI_ebook_reader](https://github.com/tzubertowski/TreeFrogUI_ebook_reader) |
+| `nds` | Nintendo DS - **standalone**, experimental | `cubegm/dsperate/run_sf3000.sh` | [beebono/DSperate](https://github.com/beebono/DSperate) |
 
 ---
 

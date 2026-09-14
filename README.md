@@ -6,10 +6,6 @@ A free, custom game-menu (frontend) for a range of MIPS-based Hichip handhelds -
 
 **Supported devices:** R36SX (v2.6 & v2.7), **R36 HD** (and R36SX clones - see [install guide](install.md#r36sx-clones-r36hd-etc)), SF3000, SF3000 HD, SF3100, SF3500, and GB350.
 
-### R36HD manual installation
-
-For a manual R36HD setup, start with the [R36HD stock backup](https://github.com/tzubertowski/H.OS_stock_backup/releases/download/stock-backups-v1/R36HD_stock.7z), restore it to a freshly FAT32-formatted card, copy the TreeFrogUI release payload to the card root, then copy `install_first/r36sx/` to the root. R36HD uses the R36SX v2.6-compatible boot/menu stack; do not restore the protected v2.7 stock menu afterward. See the complete [R36HD clone installation procedure](install.md#r36sx-clones-r36hd-etc).
-
 ![UI Preview on SF3000 Console](console.jpg)
 
 > # ☕ Consider donating to extend device support: [ko-fi.com/proszty](https://ko-fi.com/proszty)
@@ -105,6 +101,7 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **segacd** | Sega CD / Mega CD | `genesis_plus_gx_libretro.so` |
 | **PS**, **ps1**, **psx** | PlayStation - 📖 [setup guide](docs/cores/ps1.md) | `pcsx_rearmed_libretro.so` |
 | **psp** | PSP - optional standalone SF3000 PPSSPP port, falls back to `ppsspp_libretro.so` | `ppsspp` / `ppsspp_libretro.so` |
+| **nds** | Nintendo DS - experimental standalone DSperate port with HCGE scaling | `dsperate/run_sf3000.sh` |
 | **pce** | PC Engine / TurboGrafx-16 - 📖 [notes](docs/cores/pce.md) | `mednafen_pce_fast_libretro.so` |
 | **pcesgx** | PC Engine SuperGrafx | `mednafen_supergrafx_libretro.so` |
 | **pcfx** | PC-FX | `mednafen_pcfx_libretro.so` |

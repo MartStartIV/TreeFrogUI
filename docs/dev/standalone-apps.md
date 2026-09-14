@@ -25,6 +25,7 @@ Current standalone apps:
 | `music`          | `cubegm/video_player` | Simple hardware-backed music player          |
 | `images`         | `cubegm/image_viewer` | Native hardware-decoded JPG/PNG/BMP/GIF/WebP/TIFF image viewer |
 | `psp`            | `cubegm/ppsspp`       | Optional standalone PPSSPP SF3000 port (falls back to libretro) |
+| `nds`            | `cubegm/dsperate/run_sf3000.sh` | Nintendo DS via DSperate (experimental) |
 
 ## The launch contract
 

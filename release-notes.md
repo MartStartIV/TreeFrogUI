@@ -1,5 +1,8 @@
 ## TreeFrogUI v1.5.0 prerelease
 
+- Nintendo DS is available in the new `roms/nds` folder through the
+  experimental standalone DSperate emulator. It uses the interpreter by
+  default; Select + Start exits back to TreeFrogUI.
 - Audio fixes suppress idle speaker static, fix silent PS1 launches and media
   playback after audio handoff, and make launcher menu ticks audible.
 - System volume is shared between FrogUI Settings, the in-game menu, and the

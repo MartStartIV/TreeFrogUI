@@ -114,6 +114,19 @@ jobs:
           ln -sfn "$WORK_ROOT/picoarch" "$GITHUB_WORKSPACE/../picoarch"
           git -C picoarch submodule update --init --depth 1 libretro-common
 
+      - name: Fetch DSperate SF3000 package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$WORK_ROOT/dsperate/build/sf3000-package" "$RUNNER_TEMP/dsperate"
+          gh release download v1.15.2-rc.1 --repo tzubertowski/TreeFrogUI_DSperate \
+            --pattern 'dsperate-v1.15.2-rc.1-sf3000.tar.gz' --dir "$RUNNER_TEMP/dsperate"
+          tar -xzf "$RUNNER_TEMP/dsperate/dsperate-v1.15.2-rc.1-sf3000.tar.gz" \
+            -C "$WORK_ROOT/dsperate/build/sf3000-package"
+          test -x "$WORK_ROOT/dsperate/build/sf3000-package/dsperate"
+          grep -Fq 'DS_MIPS_JIT=${DS_MIPS_JIT:-0}' "$WORK_ROOT/dsperate/build/sf3000-package/run_sf3000.sh"
+
       - name: Download previous full release as build base
         env:
           GH_TOKEN: ${{ github.token }}

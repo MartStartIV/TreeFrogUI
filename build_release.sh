@@ -39,6 +39,7 @@ FROGUI="$FROGUI_ROOT/out/frogui_libretro.so"
 FROGSHELL=/home/tomaszz/sf3000-work/FrogShell
 FROGSHELL_ASSET="$(pwd)/assets/frogshell_libretro.so"
 EBOOK=/home/tomaszz/sf3000-work/ebook/ebook
+DSPERATE=/home/tomaszz/sf3000-work/dsperate/build/sf3000-package
 TYRQUAKE=/home/tomaszz/sf3000-work/tyrquake-og/tyrquake_libretro.so
 # CI/release builders can provide the small per-device stock bootstrap files
 # from a previous full release instead of keeping proprietary stock SD images
@@ -149,6 +150,10 @@ cp_if_diff "$FROGUI_ROOT/out/frogui_libretro.harfbuzz.LICENSE" "$STAGE/frogui/li
 cp_if_diff "$FROGUI_ROOT/out/frogui_libretro.sheenbidi.LICENSE" "$STAGE/frogui/licenses/sheenbidi.LICENSE"
 cp_if_diff "$TYRQUAKE"    "$STAGE/cubegm/cores/tyrquake_libretro.so"
 cp_if_diff "$EBOOK" "$STAGE/cubegm/ebook"
+if [ -d "$DSPERATE" ]; then
+    rm -rf "$STAGE/cubegm/dsperate"
+    cp -a "$DSPERATE" "$STAGE/cubegm/dsperate"
+fi
 sh "$HIJACK/build_tfhijack.sh" >/dev/null
 cp_if_diff "$HIJACK/nosleep" "$STAGE/cubegm/nosleep"
 
@@ -188,6 +193,7 @@ fi
 [ -d "$STAGE/roms" ] && cp -a "$STAGE/roms" "$OUT/roms"
 mkdir -p "$OUT/roms/images"
 mkdir -p "$OUT/roms/music"
+mkdir -p "$OUT/roms/nds"
 
 # Canvas ships hundreds of ES-DE targets and a second high-resolution mirror.
 # FrogUI requests only exact ROM-folder names plus its four built-in screens.
@@ -210,7 +216,7 @@ fi
 #     (retired boot), cubevol + generic driver.so (stock), *.bak / test bins (junk).
 # (boot logos are NOT shipped here - install_first/<dev>/ provides the device-correct
 #  xgame-logo.bmp, so no fix_bootlogo script is needed.)
-for x in lgpt lgpt.elf pcsx4all pico286 rockbox rockbox.sh ebook video_player image_viewer ppsspp; do
+for x in lgpt lgpt.elf pcsx4all pico286 rockbox rockbox.sh ebook video_player image_viewer ppsspp dsperate; do
     [ -e "$STAGE/cubegm/$x" ] && cp -a "$STAGE/cubegm/$x" "$OUT/cubegm/$x"
 done
 install -m 0755 apps/usb_mode/usb_mode.sh "$OUT/cubegm/usb_mode.sh"
