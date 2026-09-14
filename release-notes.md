@@ -1,4 +1,7 @@
-## TreeFrogUI v1.5.0 prerelease
+## TreeFrogUI v1.5.0_f prerelease
+
+- Battery status uses the calibrated curve and adds an option to restore the stock battery indicator.
+- Fixed localized Picoarch player-control labels, the missing volume percent sign, and volume value alignment.
 
 - Nintendo DS is available in the new `roms/nds` folder through the
   experimental standalone DSperate emulator. It uses the interpreter by
