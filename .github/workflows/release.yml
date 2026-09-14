@@ -52,6 +52,7 @@ jobs:
         id: names
         shell: bash
         env:
+          GH_TOKEN: ${{ github.token }}
           INPUT_TAG: ${{ inputs.tag }}
           INPUT_BASE: ${{ inputs.base_tag }}
           INPUT_UPDATE_BASE: ${{ inputs.update_base_tag }}
@@ -74,6 +75,10 @@ jobs:
           fi
           base="$INPUT_BASE"
           update_base="$INPUT_UPDATE_BASE"
+          if [[ "$EVENT_NAME" == push && -z "$base" ]]; then
+            base=$(gh release list --limit 100 --json tagName --jq '.[].tagName' | awk -v current="$tag" '$0 != current { print; exit }')
+            update_base="$base"
+          fi
           [[ -n "$base" ]] || { echo 'base_tag is required for release builds' >&2; exit 1; }
           [[ -n "$update_base" ]] || { echo 'update_base_tag is required for release builds' >&2; exit 1; }
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
@@ -266,7 +271,11 @@ jobs:
           set -euo pipefail
           args=("$RELEASE_TAG" "release/latest/TreeFrogUI_${VERSION}.zip" "release/latest/update.zip" --repo "$GITHUB_REPOSITORY" --title "TreeFrogUI ${VERSION}" --notes-file release-notes.md)
           if [[ "$PRERELEASE" == true || "$RELEASE_TAG" == *-unstable* ]]; then args+=(--prerelease); fi
-          gh release create "${args[@]}"
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "release/latest/TreeFrogUI_${VERSION}.zip" release/latest/update.zip --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "${args[@]}"
+          fi
 
       - name: Post concise release update to Discord
         if: steps.names.outputs.tag != ''
