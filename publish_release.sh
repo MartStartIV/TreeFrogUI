@@ -80,6 +80,7 @@ if gh release view "$TAG" >/dev/null 2>&1; then
 else
     gh release create "$TAG" "$FULL" "$UPDATE" \
         --title "TreeFrogUI $TAG" \
+        --prerelease \
         --notes-file release-notes.md
 fi
 
