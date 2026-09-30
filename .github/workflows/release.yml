@@ -184,6 +184,24 @@ jobs:
           ./build_sf3000.sh
           ./build_picoarch_hi.sh
 
+      - name: Build QPSX core
+        working-directory: ${{ env.WORK_ROOT }}/sf3000_treefrogui
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/angree/sf2000-qpsx-playstation-emulator.git cores/qpsx
+          git -C cores/qpsx apply patches/qpsx-sf3000.patch
+          toolchain="$WORK_ROOT/sf3000toolchain/mipsel-buildroot-linux-gnu_sdk-buildroot"
+          prefix="$toolchain/opt/ext-toolchain/bin/mips-mti-linux-gnu-"
+          sysroot="$toolchain/mipsel-buildroot-linux-gnu/sysroot"
+          make -C cores/qpsx -f Makefile.libretro platform=sf3000 \
+            CC="${prefix}gcc" CXX="${prefix}g++" \
+            AR="${prefix}ar" RANLIB="${prefix}ranlib" \
+            LDFLAGS="-shared -Wl,--no-undefined -mips32r2 -mhard-float -mfp32 -EL --sysroot=$sysroot -L$sysroot/usr/lib -lm -lc -lstdc++" \
+            -j"$(nproc)"
+          mkdir -p build
+          cp cores/qpsx/pcsx4all_libretro.so build/qpsx_libretro.so
+          "${prefix}strip" build/qpsx_libretro.so
+
       - name: Build and check ebook reader
         working-directory: ${{ env.WORK_ROOT }}/ebook
         run: |

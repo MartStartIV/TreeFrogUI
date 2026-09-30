@@ -1,4 +1,9 @@
-## TreeFrogUI v1.5.0_l prerelease
+## TreeFrogUI v1.5.0_m prerelease
+
+Changes since the v1.5.0_l build:
+
+- Fixed QPSX packaging: the SF3000 QPSX core is now built during release CI,
+  included in `cubegm/cores/` as `qpsx_libretro.so`, and selected by FrogUI.
 
 Changes since the v1.5.0_j build:
 

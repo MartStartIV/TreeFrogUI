@@ -503,9 +503,9 @@ make -C "$CORES/qpsx" -f Makefile.libretro platform=sf3000 \
     CC="$WRAP/mips-gcc" CXX="$WRAP/mips-g++" \
     AR="$AR" RANLIB="$RANLIB" LDFLAGS="$LDFLAGS_S" -j"$(nproc)" 2>&1
 if [ -f "$CORES/qpsx/pcsx4all_libretro.so" ]; then
-    cp "$CORES/qpsx/pcsx4all_libretro.so" "$OUT/pcsx4all_libretro.so"
-    "$STRIP" "$OUT/pcsx4all_libretro.so"
-    echo "→ $OUT/pcsx4all_libretro.so"
+    cp "$CORES/qpsx/pcsx4all_libretro.so" "$OUT/qpsx_libretro.so"
+    "$STRIP" "$OUT/qpsx_libretro.so"
+    echo "→ $OUT/qpsx_libretro.so"
 else
     echo "WARNING: .so not found for qpsx"
 fi
