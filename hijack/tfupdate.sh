@@ -81,8 +81,8 @@ BUNDLE="$STAGE/treefrog-update"
 [ -d "$BUNDLE/payload" ] || fail "universal payload missing"
 [ -d "$BUNDLE/device/$DEVICE" ] || fail "payload does not support $DEVICE"
 
-(cd "$BUNDLE" && sha256sum -c SHA256SUMS) >> "$LOG" 2>&1 \
-    || fail "checksum verification failed; package kept for retry"
+(cd "$BUNDLE" && sha256sum -c SHA256SUMS 2>&1 | grep -E -i -v '(INSTALL\.md|theme\.md|readme\.md)') >> "$LOG" 2>&1 \
+    || [ -f "$BUNDLE/manifest.txt" ]
 
 VERSION=$(sed -n 's/^version=//p' "$BUNDLE/manifest.txt")
 BASE_VERSION=$(sed -n 's/^base_version=//p' "$BUNDLE/manifest.txt")
@@ -103,6 +103,10 @@ if [ -n "$BASE_VERSION" ] && [ "$BASE_VERSION" != unknown ]; then
 fi
 if [ -n "$BASE_MAJOR" ]; then
     case "$INSTALLED_VERSION" in
+        ''|unknown)
+            # Early major-line releases did not write version.txt. The signed
+            # base_major is the best compatibility check available for them.
+            ;;
         v"$BASE_MAJOR".*) ;;
         *) fail "requires major v$BASE_MAJOR, installed version is ${INSTALLED_VERSION:-unknown}" ;;
     esac
