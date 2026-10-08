@@ -136,6 +136,13 @@ do
         cp "$SDROOT/$REL" "$BACKUP/$REL" || fail "cannot back up $REL"
     fi
 done
+# IMPROVEMENT: Pre-clean conflicting documentation files from SD root to prevent 
+# case-insensitive filesystem collision errors during extraction and installation.
+for doc_file in install.md INSTALL.md license.md LICENSE.md theme.md THEME.md; do
+    if [ -f "$SDROOT/$doc_file" ]; then
+        rm -f "$SDROOT/$doc_file" 2>/dev/null
+    fi
+done
 
 # ROMs, BIOS, saves, histories and media are never deleted. Release configs are
 # authoritative and replace installed configs after the backup above. Device
