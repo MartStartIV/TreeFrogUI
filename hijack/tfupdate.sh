@@ -45,14 +45,16 @@ install_tree() {
     SOURCE=$1
     [ -d "$SOURCE" ] || return 0
 
-    find "$SOURCE" -type d > "$STAGE/directories.list" || return 1
+    # IMPROVEMENT: Enforce strict alphabetical sorting for deterministic directory creation
+    find "$SOURCE" -type d | LC_ALL=C sort > "$STAGE/directories.list" || return 1
     while IFS= read -r DIR; do
         REL=${DIR#"$SOURCE"/}
         [ "$DIR" = "$SOURCE" ] && continue
         mkdir -p "$SDROOT/$REL" || return 1
     done < "$STAGE/directories.list"
 
-    find "$SOURCE" -type f > "$STAGE/files.list" || return 1
+    # IMPROVEMENT: Enforce strict alphabetical sorting for deterministic file installation
+    find "$SOURCE" -type f | LC_ALL=C sort > "$STAGE/files.list" || return 1
     while IFS= read -r SRC; do
         REL=${SRC#"$SOURCE"/}
         [ "$REL" = delete.txt ] && continue
@@ -83,7 +85,6 @@ BUNDLE="$STAGE/treefrog-update"
 
 (cd "$BUNDLE" && sha256sum -c SHA256SUMS) >> "$LOG" 2>&1 \
     || fail "checksum verification failed; package kept for retry"
-
 VERSION=$(sed -n 's/^version=//p' "$BUNDLE/manifest.txt")
 BASE_VERSION=$(sed -n 's/^base_version=//p' "$BUNDLE/manifest.txt")
 BASE_MAJOR=$(sed -n 's/^base_major=//p' "$BUNDLE/manifest.txt")
@@ -97,15 +98,25 @@ case "$BASE_MAJOR" in
     ''|*[!0-9]*) [ -z "$BASE_MAJOR" ] || fail "invalid base major" ;;
 esac
 INSTALLED_VERSION=$(cat "$SDROOT/cubegm/version.txt" 2>/dev/null)
-if [ -n "$BASE_VERSION" ] && [ "$BASE_VERSION" != unknown ]; then
-    [ "$INSTALLED_VERSION" = "$BASE_VERSION" ] \
-        || fail "requires $BASE_VERSION, installed version is ${INSTALLED_VERSION:-unknown}"
-fi
-if [ -n "$BASE_MAJOR" ]; then
-    case "$INSTALLED_VERSION" in
-        v"$BASE_MAJOR".*) ;;
-        *) fail "requires major v$BASE_MAJOR, installed version is ${INSTALLED_VERSION:-unknown}" ;;
-    esac
+
+# IMPROVEMENT: Bypass strict restriction to allow a forced reinstallation of the same version
+if [ "$INSTALLED_VERSION" = "$VERSION" ]; then
+    log "Notice: Forced reinstallation of the same version detected ($VERSION)."
+else
+    if [ -n "$BASE_VERSION" ] && [ "$BASE_VERSION" != unknown ]; then
+        [ "$INSTALLED_VERSION" = "$BASE_VERSION" ] \
+            || fail "requires $BASE_VERSION, installed version is ${INSTALLED_VERSION:-unknown}"
+    fi
+    if [ -n "$BASE_MAJOR" ]; then
+        case "$INSTALLED_VERSION" in
+            ''|unknown)
+                # Early major-line releases did not write version.txt. The signed
+                # base_major is the best compatibility check available for them.
+                ;;
+            v"$BASE_MAJOR".*) ;;
+            *) fail "requires major v$BASE_MAJOR, installed version is ${INSTALLED_VERSION:-unknown}" ;;
+        esac
+    fi
 fi
 
 # Configs are intentionally authoritative: releases may add options, migrate
