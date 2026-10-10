@@ -99,7 +99,7 @@ TF_ROTATE=@ROT@
 TF_PRESENT=@PRESENT@
 TF_DRIVER=/mnt/sdcard/cubegm/@DRIVER@
 EOF
-export TF_DEVICE=@DEV@ TF_PANEL_W=@PW@ TF_PANEL_H=@PH@ UI_SCALE=150
+export TF_DEVICE=@DEV@ TF_PANEL_W=@PW@ TF_PANEL_H=@PH@ TF_UI_SCALE=150
 
 # Some "SF3000"-branded units are really SF3500-class hardware (the "v3" / HDMI
 # variant): same 854x480 panel geometry, but the SF3500 audio+display driver. The
